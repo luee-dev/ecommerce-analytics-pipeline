@@ -1,0 +1,25 @@
+services:
+  # Trino SQL Query Engine
+  trino:
+    image: trinodb/trino:435
+    container_name: trinod
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./trino/catalog:/etc/catalog
+    environment:
+      - JVM_MAX_HEAP=2G
+
+  # Apache Airflow Orchestrator
+  airflow:
+    image: apache/airflow:2.8.1-python3.10
+    conatiner_name: airflow
+    ports:
+      - "8082:8080"
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+    volumes:
+      - ./dags:/opt/airflow/dags
+    command: standalone
+    
